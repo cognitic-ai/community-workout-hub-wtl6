@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/components/theme-provider";
+import { WorkoutProvider } from "@/store/workout-store";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Tabs as WebTabs } from "expo-router/tabs";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
@@ -7,7 +8,9 @@ import { Platform, useWindowDimensions } from "react-native";
 export default function Layout() {
   return (
     <ThemeProvider>
-      <TabsLayout />
+      <WorkoutProvider>
+        <TabsLayout />
+      </WorkoutProvider>
     </ThemeProvider>
   );
 }
@@ -41,17 +44,23 @@ function WebTabsLayout() {
       }}
     >
       <WebTabs.Screen
-        name="index"
+        name="(workouts)"
         options={{
-          title: "Home",
-          tabBarIcon: (props) => <MaterialIcons {...props} name="home" />,
+          title: "Workouts",
+          tabBarIcon: (props) => <MaterialIcons {...props} name="fitness-center" />,
         }}
       />
       <WebTabs.Screen
-        name="info"
+        name="(activity)"
         options={{
-          title: "Info",
-          tabBarIcon: (props) => <MaterialIcons {...props} name="info" />,
+          title: "Activity",
+          tabBarIcon: (props) => <MaterialIcons {...props} name="people" />,
+        }}
+      />
+      <WebTabs.Screen
+        name="workout"
+        options={{
+          href: null,
         }}
       />
     </WebTabs>
@@ -61,28 +70,29 @@ function WebTabsLayout() {
 function NativeTabsLayout() {
   return (
     <NativeTabs>
-      <NativeTabs.Trigger name="index">
-        <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
+      <NativeTabs.Trigger name="(workouts)">
+        <NativeTabs.Trigger.Label>Workouts</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           {...Platform.select({
-            ios: { sf: { default: "house", selected: "house.fill" } },
+            ios: { sf: { default: "figure.run", selected: "figure.run" } },
             default: {
-              src: <NativeTabs.Trigger.VectorIcon family={MaterialIcons} name="home" />,
+              src: <NativeTabs.Trigger.VectorIcon family={MaterialIcons} name="fitness-center" />,
             },
           })}
         />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="info">
-        <NativeTabs.Trigger.Label>Info</NativeTabs.Trigger.Label>
+      <NativeTabs.Trigger name="(activity)">
+        <NativeTabs.Trigger.Label>Activity</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           {...Platform.select({
-            ios: { sf: "cursorarrow.rays" },
+            ios: { sf: { default: "person.2", selected: "person.2.fill" } },
             default: {
-              src: <NativeTabs.Trigger.VectorIcon family={MaterialIcons} name="info" />,
+              src: <NativeTabs.Trigger.VectorIcon family={MaterialIcons} name="people" />,
             },
           })}
         />
       </NativeTabs.Trigger>
+      {/* workout route is hidden from tabs but accessible via navigation */}
     </NativeTabs>
   );
 }
